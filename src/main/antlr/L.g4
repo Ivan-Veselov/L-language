@@ -33,6 +33,9 @@ statement
 
     |   'return' expression
         # returnStatement
+
+    |   'write' '(' expression ')'
+        # writeStatement
     ;
 
 expression
@@ -41,6 +44,9 @@ expression
 
     |   IDENTIFIER
         # variableAccessExpression
+
+    |   'read' '(' ')'
+        # readExpression
 
     |   IDENTIFIER '(' arguments += expression (',' arguments += expression)* ')'
         # functionCallExpression
@@ -150,5 +156,5 @@ COMMENTARY
     ;
 
 WHITESPACE
-    :   (NEWLINE | '\u0020' | '\u0009' | '\u000C')+ -> skip // SP | HT | FF
+    :   ('\u0020' | '\u0009' | '\u000C')+ -> skip // SP | HT | FF
     ;
