@@ -1,0 +1,110 @@
+Исходный код программы является блоком, который является последовательным списком
+инструкций (statement).
+
+Инструкция -- это одно из следующего:
+\begin{itemize}
+    \item Определение функции (можно определять локальные функции внутри других функций)
+\begin{lstlisting}
+fun functionName(arg1, arg2, ..., argn) {
+    block
+}
+\end{lstlisting}
+    Внутри фигурных скобок находится тело функции, которое тоже является блоком
+    (как и весь исходный код программы).\\
+    
+    \item Определение переменной
+\begin{lstlisting}
+var identifier [:= expression]
+\end{lstlisting}
+    Допускается опциональное инициализирующее выражение (о которых дальше).\\
+    
+    \item Цикл while
+\begin{lstlisting}
+while (expression) {
+    block
+}
+\end{lstlisting}
+    
+    \item Команда ветвления
+\begin{lstlisting}
+if (expression) {
+    block
+}
+\end{lstlisting}
+    Или
+\begin{lstlisting}
+if (expression) {
+    block
+} else {
+    block
+}
+\end{lstlisting}
+    
+    \item Присваивание
+\begin{lstlisting}
+identifier := expression
+\end{lstlisting}
+
+    \item Возвращение значения
+\begin{lstlisting}
+return expression
+\end{lstlisting}
+    
+    \item Команда записи в выходной поток
+\begin{lstlisting}
+write(expression)
+\end{lstlisting}
+    
+    \item Выражение\\
+\end{itemize}
+
+
+Выражением является (в порядке уменьшения приоритета):
+\begin{itemize}
+    \item Идентификатор\\
+    
+    \item Команда чтения из входного потока
+\begin{lstlisting}
+read()
+\end{lstlisting}
+    
+    \item Вызов функции
+\begin{lstlisting}
+functionName(arg1, arg2, ..., argn)
+\end{lstlisting}
+    
+    \item Числовой литерал\\
+    
+    \item Мультипликативный оператор
+\begin{lstlisting}
+* | / | %
+\end{lstlisting}
+    
+    \item Аддитивный оператор
+\begin{lstlisting}
++ | -
+\end{lstlisting}
+    
+    \item Оператор сравнения порядка
+\begin{lstlisting}
+< | > | <= | >=
+\end{lstlisting}
+    
+    \item Оператор сравнения равенства
+\begin{lstlisting}
+== | !=
+\end{lstlisting}
+    
+    \item Логическая конъюнкция
+\begin{lstlisting}
+&&
+\end{lstlisting}
+    
+    \item Логическая дизъюнкция
+\begin{lstlisting}
+||
+\end{lstlisting}
+\end{itemize}
+
+Выражение также может содержать группирующие скобки.
+
