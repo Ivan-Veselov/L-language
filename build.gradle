@@ -49,3 +49,13 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'ru.spbau.mit.bachelors2015.veselov.MainKt'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
