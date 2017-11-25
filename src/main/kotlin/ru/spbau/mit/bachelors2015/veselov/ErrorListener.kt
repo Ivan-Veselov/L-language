@@ -7,11 +7,11 @@ import org.antlr.v4.runtime.misc.ParseCancellationException
 
 object ErrorListener : BaseErrorListener() {
     override fun syntaxError(
-        recognizer: Recognizer<*, *>,
-        offendingSymbol: Any,
+        recognizer: Recognizer<*, *>?,
+        offendingSymbol: Any?,
         line: Int,
         charPositionInLine: Int,
-        msg: String,
+        msg: String?,
         e: RecognitionException?
     ) {
         throw ParseCancellationException("line $line:$charPositionInLine $msg")

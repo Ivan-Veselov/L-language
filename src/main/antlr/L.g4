@@ -6,12 +6,12 @@ file
     ;
 
 block
-    :   (NEWLINE)* statements += statement (NEWLINE+ statements += statement)* (NEWLINE)*
+    :   (NEWLINE)* (statements += statement (NEWLINE+ statements += statement)*)? (NEWLINE)*
     ;
 
 statement
-    :   'fun' functionName = IDENTIFIER '(' parameterNames += IDENTIFIER
-                                            (',' parameterNames += IDENTIFIER)* ')'
+    :   'fun' functionName = IDENTIFIER '(' (parameterNames += IDENTIFIER
+                                            (',' parameterNames += IDENTIFIER)*)? ')'
         '{' functionBody = block '}'
         # functionDefinitionStatement
 

@@ -1,0 +1,7 @@
+File[1:0]
+  Block[1:0]
+    WhileStatement[1:0]
+      BinaryExpression LESS[1:7]
+        VariableAccess a[1:7]
+        VariableAccess b[1:11]
+      Block[1:15]

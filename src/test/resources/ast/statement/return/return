@@ -1,0 +1,6 @@
+File[1:0]
+  Block[1:0]
+    FunctionDefinition foo [1:0]
+      Block[1:11]
+        ReturnStatement[2:4]
+          IntegerLiteral 0[2:11]

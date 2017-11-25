@@ -1,0 +1,6 @@
+File[1:0]
+  Block[1:0]
+    FunctionCall foo[1:0]
+      IntegerLiteral 1[1:4]
+      IntegerLiteral 2[1:7]
+      IntegerLiteral 3[1:10]
