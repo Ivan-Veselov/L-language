@@ -1,5 +1,5 @@
 group 'ru.spbau.mit.bachelors2015.veselov'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 buildscript {
     ext.kotlin_version = '1.1.51'
