@@ -43,15 +43,10 @@ object ExpressionContextVisitor : LVisitor<AstExpression> {
         )
     }
 
-    override fun visitFunctionCallExpression(
-        ctx: LParser.FunctionCallExpressionContext?
+    override fun visitFunctionCallStatement(
+        ctx: LParser.FunctionCallStatementContext?
     ): AstExpression {
-        return AstFunctionCall(
-            ctx!!.IDENTIFIER().text,
-            ImmutableList.copyOf(ctx.arguments.map { AstExpression.buildFromRuleContext(it) }),
-            ctx.start.line,
-            ctx.start.charPositionInLine
-        )
+        throw NotAnExpressionError()
     }
 
     override fun visitExpressionInParentheses(
@@ -72,8 +67,8 @@ object ExpressionContextVisitor : LVisitor<AstExpression> {
         )
     }
 
-    override fun visitReadExpression(ctx: LParser.ReadExpressionContext?): AstExpression {
-        return AstReadExpression(ctx!!.start.line, ctx.start.charPositionInLine)
+    override fun visitReadStatement(ctx: LParser.ReadStatementContext?): AstExpression {
+        throw NotAnExpressionError()
     }
 
     override fun visitVariableDefinitionStatement(
@@ -98,14 +93,8 @@ object ExpressionContextVisitor : LVisitor<AstExpression> {
         throw NotAnExpressionError()
     }
 
-    override fun visitFunctionDefinitionStatement(
-        ctx: LParser.FunctionDefinitionStatementContext?
-    ): AstExpression {
-        throw NotAnExpressionError()
-    }
-
-    override fun visitExpressionStatement(
-        ctx: LParser.ExpressionStatementContext?
+    override fun visitFunctionDefinition(
+        ctx: LParser.FunctionDefinitionContext?
     ): AstExpression {
         throw NotAnExpressionError()
     }
@@ -119,10 +108,6 @@ object ExpressionContextVisitor : LVisitor<AstExpression> {
     }
 
     override fun visitAssignmentStatement(ctx: LParser.AssignmentStatementContext?): AstExpression {
-        throw NotAnExpressionError()
-    }
-
-    override fun visitReturnStatement(ctx: LParser.ReturnStatementContext?): AstExpression {
         throw NotAnExpressionError()
     }
 

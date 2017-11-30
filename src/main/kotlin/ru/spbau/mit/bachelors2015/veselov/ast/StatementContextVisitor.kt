@@ -11,28 +11,8 @@ import ru.spbau.mit.bachelors2015.veselov.parser.LVisitor
 class NotAStatementError : Error()
 
 object StatementContextVisitor : LVisitor<AstStatement> {
-    override fun visitFunctionDefinitionStatement(
-        ctx: LParser.FunctionDefinitionStatementContext
-    ): AstStatement {
-        return AstFunctionDefinition(
-            ctx.functionName.text,
-            ImmutableList.copyOf(ctx.parameterNames.map { it.text }),
-            AstBlock.buildFromRuleContext(ctx.functionBody),
-            ctx.start.line,
-            ctx.start.charPositionInLine
-        )
-    }
-
-    override fun visitExpressionStatement(ctx: LParser.ExpressionStatementContext): AstStatement {
-        return AstExpression.buildFromRuleContext(ctx.expression())
-    }
-
-    override fun visitReturnStatement(ctx: LParser.ReturnStatementContext): AstStatement {
-        return AstReturn(
-            AstExpression.buildFromRuleContext(ctx.expression()),
-            ctx.start.line,
-            ctx.start.charPositionInLine
-        )
+    override fun visitFunctionDefinition(ctx: LParser.FunctionDefinitionContext?): AstStatement {
+        throw NotAStatementError()
     }
 
     override fun visitWriteStatement(ctx: LParser.WriteStatementContext): AstStatement {
@@ -119,10 +99,15 @@ object StatementContextVisitor : LVisitor<AstStatement> {
         throw NotAStatementError()
     }
 
-    override fun visitFunctionCallExpression(
-        ctx: LParser.FunctionCallExpressionContext
-    ): AstStatement {
-        throw NotAStatementError()
+    override fun visitFunctionCallStatement(
+        ctx: LParser.FunctionCallStatementContext?
+    ): AstExpression {
+        return AstFunctionCall(
+                ctx!!.functionName.text,
+                ImmutableList.copyOf(ctx.arguments.map { it.text }),
+                ctx.start.line,
+                ctx.start.charPositionInLine
+        )
     }
 
     override fun visitIntegerLiteralExpression(
@@ -137,8 +122,8 @@ object StatementContextVisitor : LVisitor<AstStatement> {
         throw NotAStatementError()
     }
 
-    override fun visitReadExpression(ctx: LParser.ReadExpressionContext): AstStatement {
-        throw NotAStatementError()
+    override fun visitReadStatement(ctx: LParser.ReadStatementContext?): AstStatement {
+        return AstReadStatement(ctx!!.start.line, ctx.start.charPositionInLine)
     }
 
     override fun visitErrorNode(node: ErrorNode): AstStatement {

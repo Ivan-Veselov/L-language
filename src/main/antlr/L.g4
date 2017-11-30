@@ -2,24 +2,29 @@ grammar L;
 
 
 file
-    :   block EOF
+    :   (NEWLINE)*
+        (functions += functionDefinition (NEWLINE+ functions += functionDefinition)*)?
+        (NEWLINE)*
+        block
+        EOF
     ;
 
 block
     :   (NEWLINE)* (statements += statement (NEWLINE+ statements += statement)*)? (NEWLINE)*
     ;
 
-statement
+functionDefinition
     :   'fun' functionName = IDENTIFIER '(' (parameterNames += IDENTIFIER
                                             (',' parameterNames += IDENTIFIER)*)? ')'
         '{' functionBody = block '}'
-        # functionDefinitionStatement
+    ;
 
-    |   'var' variableName = IDENTIFIER (':=' initialValueExpression = expression)?
+statement
+    :   'var' variableName = IDENTIFIER (':=' initialValueExpression = expression)?
         # variableDefinitionStatement
 
-    |   expression
-        # expressionStatement
+    |   functionName = IDENTIFIER '(' arguments += IDENTIFIER (',' arguments += IDENTIFIER)* ')'
+        # functionCallStatement
 
     |   'while' '(' condition = expression ')' '{' body = block '}'
         # whileStatement
@@ -31,11 +36,11 @@ statement
     |   IDENTIFIER ':=' expression
         # assignmentStatement
 
-    |   'return' expression
-        # returnStatement
-
     |   'write' '(' expression ')'
         # writeStatement
+
+    |   'read' '(' ')'
+        # readStatement
     ;
 
 expression
@@ -44,12 +49,6 @@ expression
 
     |   IDENTIFIER
         # variableAccessExpression
-
-    |   'read' '(' ')'
-        # readExpression
-
-    |   IDENTIFIER '(' arguments += expression (',' arguments += expression)* ')'
-        # functionCallExpression
 
     |   DECIMAL_FLOATING_POINT_LITERAL
         # floatLiteralExpression

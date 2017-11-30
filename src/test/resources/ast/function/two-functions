@@ -1,0 +1,6 @@
+File[1:0]
+  FunctionDefinition foo [1:0]
+    Block[1:11]
+  FunctionDefinition bar [4:0]
+    Block[4:11]
+  Block[6:0]

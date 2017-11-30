@@ -13,13 +13,23 @@ abstract class AstNode(val line: Int, val column: Int) {
     abstract fun traverse(traverser: Traverser)
 }
 
-class AstFile(val body: AstBlock, line: Int, column: Int) : AstNode(line, column) {
+class AstFile(
+    val functions: ImmutableList<AstFunctionDefinition>,
+    val body: AstBlock,
+    line: Int,
+    column: Int
+) : AstNode(line, column) {
     override fun toString(): String {
         return "File"
     }
 
     override fun traverse(traverser: Traverser) {
         traverser.stepIn(this)
+
+        for (function in functions) {
+            function.traverse(traverser)
+        }
+
         body.traverse(traverser)
         traverser.stepOut(this)
     }
@@ -27,6 +37,9 @@ class AstFile(val body: AstBlock, line: Int, column: Int) : AstNode(line, column
     companion object {
         fun buildFromRuleContext(rule: LParser.FileContext): AstFile {
             return AstFile(
+                ImmutableList.copyOf(
+                    rule.functions.map { AstFunctionDefinition.buildFromRuleContext(it) }
+                ),
                 AstBlock.buildFromRuleContext(rule.block()),
                 rule.start.line,
                 rule.start.charPositionInLine
@@ -67,21 +80,13 @@ class AstBlock(
     }
 }
 
-abstract class AstStatement(line: Int, column: Int) : AstNode(line, column) {
-    companion object {
-        fun buildFromRuleContext(rule: LParser.StatementContext) : AstStatement {
-            return rule.accept(StatementContextVisitor)
-        }
-    }
-}
-
 class AstFunctionDefinition(
-    private val name: String,
-    private val parameterNames: ImmutableList<String>,
-    private val body: AstBlock,
-    line: Int,
-    column: Int
-) : AstStatement(line, column) {
+        private val name: String,
+        private val parameterNames: ImmutableList<String>,
+        private val body: AstBlock,
+        line: Int,
+        column: Int
+) : AstNode(line, column) {
     override fun toString(): String {
         return "FunctionDefinition " + name + " " +
                 parameterNames.stream().collect(Collectors.joining(" "))
@@ -91,6 +96,28 @@ class AstFunctionDefinition(
         traverser.stepIn(this)
         body.traverse(traverser)
         traverser.stepOut(this)
+    }
+
+    companion object {
+        fun buildFromRuleContext(rule: LParser.FunctionDefinitionContext): AstFunctionDefinition {
+            return AstFunctionDefinition(
+                rule.functionName.text,
+                ImmutableList.copyOf(
+                        rule.parameterNames.map { it.text }
+                ),
+                AstBlock.buildFromRuleContext(rule.block()),
+                rule.start.line,
+                rule.start.charPositionInLine
+            )
+        }
+    }
+}
+
+abstract class AstStatement(line: Int, column: Int) : AstNode(line, column) {
+    companion object {
+        fun buildFromRuleContext(rule: LParser.StatementContext) : AstStatement {
+            return rule.accept(StatementContextVisitor)
+        }
     }
 }
 
@@ -190,22 +217,6 @@ class AstAssignment(
     }
 }
 
-class AstReturn(
-    private val expression: AstExpression,
-    line: Int,
-    column: Int
-) : AstStatement(line, column) {
-    override fun toString(): String {
-        return "ReturnStatement"
-    }
-
-    override fun traverse(traverser: Traverser) {
-        traverser.stepIn(this)
-        expression.traverse(traverser)
-        traverser.stepOut(this)
-    }
-}
-
 class AstVariableAccess(
     private val identifier: String,
     line: Int,
@@ -223,21 +234,17 @@ class AstVariableAccess(
 
 class AstFunctionCall(
     private val identifier: String,
-    private val argumentExpressions: ImmutableList<AstExpression>,
+    private val argumentIdentifiers: ImmutableList<String>,
     line: Int,
     column: Int
 ) : AstExpression(line, column) {
     override fun toString(): String {
-        return "FunctionCall " + identifier
+        return "FunctionCall " + identifier + ": " +
+                argumentIdentifiers.stream().collect(Collectors.joining(" "))
     }
 
     override fun traverse(traverser: Traverser) {
         traverser.stepIn(this)
-
-        for (expression in argumentExpressions) {
-            expression.traverse(traverser)
-        }
-
         traverser.stepOut(this)
     }
 }
@@ -291,9 +298,9 @@ class AstBinaryExpression(
     }
 }
 
-class AstReadExpression(line: Int, column: Int) : AstExpression(line, column) {
+class AstReadStatement(line: Int, column: Int) : AstStatement(line, column) {
     override fun toString(): String {
-        return "ReadExpression"
+        return "ReadStatement"
     }
 
     override fun traverse(traverser: Traverser) {
