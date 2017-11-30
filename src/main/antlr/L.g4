@@ -39,7 +39,7 @@ statement
     |   'write' '(' expression ')'
         # writeStatement
 
-    |   'read' '(' ')'
+    |   'read' '(' target = IDENTIFIER ')'
         # readStatement
     ;
 

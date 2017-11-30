@@ -298,9 +298,13 @@ class AstBinaryExpression(
     }
 }
 
-class AstReadStatement(line: Int, column: Int) : AstStatement(line, column) {
+class AstReadStatement(
+    private val target: String,
+    line: Int,
+    column: Int
+) : AstStatement(line, column) {
     override fun toString(): String {
-        return "ReadStatement"
+        return "ReadStatement " + target
     }
 
     override fun traverse(traverser: Traverser) {

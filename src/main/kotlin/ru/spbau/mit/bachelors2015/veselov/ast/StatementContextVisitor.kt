@@ -123,7 +123,7 @@ object StatementContextVisitor : LVisitor<AstStatement> {
     }
 
     override fun visitReadStatement(ctx: LParser.ReadStatementContext?): AstStatement {
-        return AstReadStatement(ctx!!.start.line, ctx.start.charPositionInLine)
+        return AstReadStatement(ctx!!.target.text, ctx.start.line, ctx.start.charPositionInLine)
     }
 
     override fun visitErrorNode(node: ErrorNode): AstStatement {
