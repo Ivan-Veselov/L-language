@@ -1,17 +1,16 @@
-Исходный код программы является блоком, который является последовательным списком
-инструкций (statement).
+Исходный код программы является последовательностью объявлений функций, за
+которой следует основной блок кода -- сама программа.
+Блок кода и тело каждой функции состоит из инструкций (statement).
 
-Инструкция -- это одно из следующего:
-\begin{itemize}
-    \item Определение функции (можно определять локальные функции внутри других функций)
+Синтаксис для объявления функции выглядит следующим образом:
 \begin{lstlisting}
-fun functionName(arg1, arg2, ..., argn) {
+fun functionName(id1, id2, ..., idn) {
     block
 }
 \end{lstlisting}
-    Внутри фигурных скобок находится тело функции, которое тоже является блоком
-    (как и весь исходный код программы).\\
-    
+
+Инструкция -- это одно из следующего:
+\begin{itemize}
     \item Определение переменной
 \begin{lstlisting}
 var identifier [:= expression]
@@ -44,34 +43,27 @@ if (expression) {
 \begin{lstlisting}
 identifier := expression
 \end{lstlisting}
-
-    \item Возвращение значения
-\begin{lstlisting}
-return expression
-\end{lstlisting}
     
     \item Команда записи в выходной поток
 \begin{lstlisting}
 write(expression)
 \end{lstlisting}
-    
-    \item Выражение\\
+
+    \item Команда чтения из входного потока
+\begin{lstlisting}
+read(identifier)
+\end{lstlisting}
+
+    \item Вызов функции
+\begin{lstlisting}
+functionName(id1, id2, ..., idn)
+\end{lstlisting}
 \end{itemize}
 
 
-Выражением является (в порядке уменьшения приоритета):
+Выражением (expression) является (в порядке уменьшения приоритета):
 \begin{itemize}
     \item Идентификатор\\
-    
-    \item Команда чтения из входного потока
-\begin{lstlisting}
-read()
-\end{lstlisting}
-    
-    \item Вызов функции
-\begin{lstlisting}
-functionName(arg1, arg2, ..., argn)
-\end{lstlisting}
     
     \item Числовой литерал\\
     
