@@ -1,0 +1,4 @@
+File[1:0]
+  Block[1:0]
+    AssignmentStatement a[1:0]
+      VariableAccess b[1:5]
