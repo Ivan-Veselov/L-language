@@ -1,0 +1,6 @@
+File[1:0]
+  Block[1:0]
+    AssignmentStatement x[1:0]
+      BinaryExpression PLUS[1:5]
+        IntegerLiteral 3[1:5]
+        IntegerLiteral 1[2:2]

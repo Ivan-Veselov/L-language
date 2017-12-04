@@ -1,4 +1,4 @@
 File[1:0]
   FunctionDefinition foo arg1 arg2[1:0]
-    Block[1:21]
+    Block[2:0]
   Block[2:1]

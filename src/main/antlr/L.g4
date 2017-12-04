@@ -2,15 +2,13 @@ grammar L;
 
 
 file
-    :   (NEWLINE)*
-        (functions += functionDefinition (NEWLINE+ functions += functionDefinition)*)?
-        (NEWLINE)*
+    :   (functions += functionDefinition)*
         block
         EOF
     ;
 
 block
-    :   (NEWLINE)* (statements += statement (NEWLINE+ statements += statement)*)? (NEWLINE)*
+    :   (statements += statement)*
     ;
 
 functionDefinition
@@ -20,10 +18,10 @@ functionDefinition
     ;
 
 statement
-    :   'var' variableName = IDENTIFIER (':=' initialValueExpression = expression)?
+    :   'var' variableName = IDENTIFIER (':=' initialValueExpression = expression)? SEMICOLON
         # variableDefinitionStatement
 
-    |   functionName = IDENTIFIER '(' arguments += IDENTIFIER (',' arguments += IDENTIFIER)* ')'
+    |   functionName = IDENTIFIER '(' arguments += IDENTIFIER (',' arguments += IDENTIFIER)* ')' SEMICOLON
         # functionCallStatement
 
     |   'while' '(' condition = expression ')' '{' body = block '}'
@@ -33,13 +31,13 @@ statement
         ('else' '{' elseBody = block '}')?
         # ifStatement
 
-    |   IDENTIFIER ':=' expression
+    |   IDENTIFIER ':=' expression SEMICOLON
         # assignmentStatement
 
-    |   'write' '(' expression ')'
+    |   'write' '(' expression ')' SEMICOLON
         # writeStatement
 
-    |   'read' '(' target = IDENTIFIER ')'
+    |   'read' '(' target = IDENTIFIER ')' SEMICOLON
         # readStatement
     ;
 
@@ -146,8 +144,12 @@ DECIMAL_FLOATING_POINT_LITERAL
     |   DIGITS EXPONENT_PART
     ;
 
+SEMICOLON
+    : ';'
+    ;
+
 NEWLINE
-    :   '\r'? '\n'
+    :   '\r'? '\n' -> skip
     ;
 
 COMMENTARY

@@ -1,5 +1,6 @@
 package ru.spbau.mit.bachelors2015.veselov
 
+import org.antlr.v4.runtime.misc.ParseCancellationException
 import org.apache.commons.io.FileUtils
 import org.junit.Test
 import ru.spbau.mit.bachelors2015.veselov.ast.AstFile
@@ -10,12 +11,36 @@ import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.*
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
 
 
 class TestClass {
     @Test
-    fun test() {
+    fun testValid() {
         val sourceRoot = Paths.get(javaClass.getResource("/source/").toURI())
+        val fileNames = gatherNames(sourceRoot)
+
+        for (fileName in fileNames) {
+            println(fileName)
+            checkProgram(fileName)
+        }
+    }
+
+    @Test
+    fun testInvalid() {
+        val sourceRoot = Paths.get(javaClass.getResource("/invalid/").toURI())
+        val fileNames = gatherNames(sourceRoot)
+
+        for (fileName in fileNames) {
+            println(fileName)
+
+            assertFails {
+                buildAst(fileToString("/invalid/$fileName.L"))
+            }
+        }
+    }
+
+    private fun gatherNames(sourceRoot: Path) : List<String> {
         val fileNames = ArrayList<String>()
 
         Files.walkFileTree(sourceRoot, object : SimpleFileVisitor<Path>() {
@@ -29,10 +54,7 @@ class TestClass {
             }
         })
 
-        for (fileName in fileNames) {
-            println(fileName)
-            checkProgram(fileName)
-        }
+        return fileNames
     }
 
     private fun printAst(ast: AstFile) : String {

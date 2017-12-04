@@ -1,2 +1,2 @@
-read(a)
-read(b)
+read(a);
+read(b);

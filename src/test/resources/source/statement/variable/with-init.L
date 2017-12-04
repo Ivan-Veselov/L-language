@@ -1,2 +1,2 @@
-var id1
-var id2 := id1
+var id1;
+var id2 := id1;
