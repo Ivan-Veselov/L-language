@@ -17,11 +17,16 @@ functionDefinition
         '{' functionBody = block '}'
     ;
 
+functionCall
+    :   functionName = IDENTIFIER '('
+           arguments += expression (',' arguments += expression)* ')'
+    ;
+
 statement
     :   'var' variableName = IDENTIFIER (':=' initialValueExpression = expression)? SEMICOLON
         # variableDefinitionStatement
 
-    |   functionName = IDENTIFIER '(' arguments += IDENTIFIER (',' arguments += IDENTIFIER)* ')' SEMICOLON
+    |   functionCall SEMICOLON
         # functionCallStatement
 
     |   'while' '(' condition = expression ')' '{' body = block '}'
@@ -44,6 +49,9 @@ statement
 expression
     :   '(' expression ')'
         # expressionInParentheses
+
+    |   functionCall
+        # functionCallExpression
 
     |   IDENTIFIER
         # variableAccessExpression

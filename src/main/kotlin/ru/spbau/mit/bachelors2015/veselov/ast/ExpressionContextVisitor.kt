@@ -13,6 +13,17 @@ class NotAnExpressionError : Error()
 class UnknownOperationLiteral : Error()
 
 object ExpressionContextVisitor : LVisitor<AstExpression> {
+    override fun visitFunctionCallExpression(
+        ctx: LParser.FunctionCallExpressionContext
+    ): AstExpression {
+        return AstFunctionCall(
+            ctx.functionCall().functionName.text,
+            ImmutableList.copyOf(ctx.functionCall().arguments.map { AstExpression.buildFromRuleContext(it) }),
+            ctx.start.line,
+            ctx.start.charPositionInLine
+        )
+    }
+
     override fun visitIntegerLiteralExpression(
         ctx: LParser.IntegerLiteralExpressionContext?
     ): AstExpression {
@@ -65,6 +76,10 @@ object ExpressionContextVisitor : LVisitor<AstExpression> {
             ctx.start.line,
             ctx.start.charPositionInLine
         )
+    }
+
+    override fun visitFunctionCall(ctx: LParser.FunctionCallContext?): AstExpression {
+        throw NotAnExpressionError()
     }
 
     override fun visitReadStatement(ctx: LParser.ReadStatementContext?): AstExpression {

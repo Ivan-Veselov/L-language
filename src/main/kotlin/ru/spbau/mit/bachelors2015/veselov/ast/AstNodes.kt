@@ -234,17 +234,21 @@ class AstVariableAccess(
 
 class AstFunctionCall(
     private val identifier: String,
-    private val argumentIdentifiers: ImmutableList<String>,
+    private val arguments: ImmutableList<AstExpression>,
     line: Int,
     column: Int
 ) : AstExpression(line, column) {
     override fun toString(): String {
-        return "FunctionCall " + identifier + ": " +
-                argumentIdentifiers.stream().collect(Collectors.joining(" "))
+        return "FunctionCall " + identifier
     }
 
     override fun traverse(traverser: Traverser) {
         traverser.stepIn(this)
+
+        for (argument in arguments) {
+            argument.traverse(traverser)
+        }
+
         traverser.stepOut(this)
     }
 }

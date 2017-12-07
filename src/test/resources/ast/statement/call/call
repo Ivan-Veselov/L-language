@@ -1,3 +1,6 @@
 File[1:0]
   Block[1:0]
-    FunctionCall foo: a b c[1:0]
+    FunctionCall foo[1:0]
+      VariableAccess a[1:4]
+      VariableAccess b[1:7]
+      VariableAccess c[1:10]

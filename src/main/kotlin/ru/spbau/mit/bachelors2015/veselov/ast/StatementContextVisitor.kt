@@ -11,6 +11,14 @@ import ru.spbau.mit.bachelors2015.veselov.parser.LVisitor
 class NotAStatementError : Error()
 
 object StatementContextVisitor : LVisitor<AstStatement> {
+    override fun visitFunctionCall(ctx: LParser.FunctionCallContext?): AstStatement {
+        throw NotAStatementError()
+    }
+
+    override fun visitFunctionCallExpression(ctx: LParser.FunctionCallExpressionContext?): AstStatement {
+        throw NotAStatementError()
+    }
+
     override fun visitFunctionDefinition(ctx: LParser.FunctionDefinitionContext?): AstStatement {
         throw NotAStatementError()
     }
@@ -100,11 +108,11 @@ object StatementContextVisitor : LVisitor<AstStatement> {
     }
 
     override fun visitFunctionCallStatement(
-        ctx: LParser.FunctionCallStatementContext?
+        ctx: LParser.FunctionCallStatementContext
     ): AstExpression {
         return AstFunctionCall(
-                ctx!!.functionName.text,
-                ImmutableList.copyOf(ctx.arguments.map { it.text }),
+                ctx.functionCall().functionName.text,
+                ImmutableList.copyOf(ctx.functionCall().arguments.map { AstExpression.buildFromRuleContext(it) }),
                 ctx.start.line,
                 ctx.start.charPositionInLine
         )
